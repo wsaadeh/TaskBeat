@@ -17,10 +17,12 @@ class MainActivity : AppCompatActivity() {
     private var categories = listOf<CategoryUiData>()
     private var categoriesEntity = listOf<CategoryEntity>()
     private var tasks = listOf<TaskUiData>()
+    private var categoryTemp = listOf<CategoryUiData>()
 
     private lateinit var rvCategory: RecyclerView
     private lateinit var ctnEmptyView: LinearLayout
     private lateinit var fabCreateTask: FloatingActionButton
+
 
     private val categoryAdapter = CategoryListAdapter()
     private val taskAdapter by lazy {
@@ -91,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 //Snackbar.make(rvCategory, "+ is selected", Snackbar.LENGTH_LONG).show()
                 showCreateCategoryBottomSheet()
             } else {
-                val categoryTemp = categories.map { item ->
+                categoryTemp = categories.map { item ->
                     when {
                         item.name == selected.name && !item.isSelected -> item.copy(isSelected = true)
 
@@ -240,8 +242,14 @@ class MainActivity : AppCompatActivity() {
     private fun updateTask(taskEntity: TaskEntity) {
         GlobalScope.launch(Dispatchers.IO) {
             taskDao.update(taskEntity)
-            getTasksFromDatabase()
-            //filterTaskByCategoryName(taskEntity.category)
+            val currentCat = categoryTemp.first(){ it.isSelected }
+            val indexCat = categoryTemp.indexOf(currentCat)
+            val Cat: String = categoryTemp[indexCat].name
+            if (Cat == "ALL"){
+                getTasksFromDatabase()
+            }else{
+                filterTaskByCategoryName(Cat)
+            }
         }
     }
 

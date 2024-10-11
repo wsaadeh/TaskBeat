@@ -82,9 +82,10 @@ class CreateOrUpdateTaskBottomSheet(
             btnDelete.isVisible = true
 
             tieTaskName.setText(task.name)
-            val currentCategory = categoryList.first() { it.name == task.category }
-            val index = categoryList.indexOf(currentCategory)
-            spinnerCat.setSelection(index)
+            //val currentCategory = categoryList.first() { it.name == task.category }
+            //val index = categoryList.indexOf(currentCategory)
+            val indexC = categoryListTemp.indexOf(task.category)
+            spinnerCat.setSelection(indexC)
         }
 
         btnDelete.setOnClickListener(){
